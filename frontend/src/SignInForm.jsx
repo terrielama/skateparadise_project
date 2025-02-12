@@ -1,50 +1,76 @@
-import React, { useState } from 'react'
-import './assets/css/style.css'
-import axios from 'axios'
+import React, { useState } from 'react';
+import './assets/css/style.css';
+import axios from 'axios';
 
 function SignInForm({ toggleModal }) {
-  const [isLoginForm, setIsLoginForm] = useState(true)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [error, setError] = useState('')
+  const [isLoginForm, setIsLoginForm] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [error, setError] = useState('');
 
   // Fonction pour l'inscription
-  const handleSignUp = async (e) => {
-    e.preventDefault()
+const handleSignUp = async (e) => {
+    e.preventDefault();
+
+    // Validation côté client
+    if (!email || !password || !firstName || !lastName) {
+        setError('Tous les champs sont requis.');
+        return;
+    }
 
     try {
-      const response = await axios.post('/api/signup/', {
-        email,
-        password,
-        first_name: firstName,
-        last_name: lastName,
-      })
-      console.log('User created successfully', response)
-      // Optionnel : Rediriger ou afficher un message de succès
+        const response = await axios.post('http://127.0.0.1:8000/api/signup/', {
+            email,
+            password,
+            first_name: firstName,
+            last_name: lastName,
+        });
+        console.log('User created successfully', response);
+        // Optionnel : Rediriger ou afficher un message de succès
     } catch (err) {
-      console.error('Error during signup', err)
-      setError('Erreur lors de l\'inscription')
+        console.error('Error during signup', err);
+        setError('Erreur lors de l\'inscription');
     }
-  }
+};
+
 
   // Fonction pour la connexion
-  const handleLogin = async (e) => {
-    e.preventDefault()
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-    try {
-      const response = await axios.post('/api/login/', {
-        email,
-        password,
-      })
-      console.log('Login successful', response)
-      // Optionnel : Stocker le token JWT ou rediriger vers une autre page
-    } catch (err) {
-      console.error('Error during login', err)
-      setError('Identifiants invalides')
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/login/', {
+      email,
+      password,
+    });
+
+    console.log('Connexion réussie', response);
+
+    // Récupérer les tokens
+    const { access_token, refresh_token } = response.data;
+
+    // Stocker les tokens dans le localStorage
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('refresh_token', refresh_token);
+
+    // Rediriger l'utilisateur vers une autre page (par exemple la page d'accueil)
+    // Utilise react-router-dom si tu l'as installé pour la redirection
+    // Par exemple : history.push('/dashboard');
+    window.location.href = '/';  // Exemple : redirige vers la page d'accueil
+
+  } catch (err) {
+    console.error('Erreur lors de la connexion', err);
+    // Affichage d'un message d'erreur plus détaillé
+    if (err.response && err.response.data) {
+      setError(err.response.data.error || 'Identifiants invalides');
+    } else {
+      setError('Une erreur est survenue lors de la connexion');
     }
   }
+};
+
 
   return (
     <div className="modal">
@@ -77,9 +103,11 @@ function SignInForm({ toggleModal }) {
                   required
                 />
               </div>
+              <div>
+                <button type="submit">Se connecter</button>
+              </div>
             </form>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button type="submit">Se connecter</button>
             <button onClick={() => setIsLoginForm(false)}>
               Pas de compte ? Inscrivez-vous
             </button>
@@ -128,9 +156,11 @@ function SignInForm({ toggleModal }) {
                   required
                 />
               </div>
+              <div>
+                <button type="submit">S'inscrire</button>
+              </div>
             </form>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button type="submit">S'inscrire</button>
             <button onClick={() => setIsLoginForm(true)}>
               Vous avez déjà un compte ? Connexion
             </button>
@@ -138,7 +168,7 @@ function SignInForm({ toggleModal }) {
         )}
       </div>
     </div>
-  )
+  );
 }
 
-export default SignInForm
+export default SignInForm;
