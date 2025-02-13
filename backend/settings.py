@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api'
+    'api',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -48,9 +51,14 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',   
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -70,6 +78,21 @@ TEMPLATES = [
     },
 ]
 
+# Configuration de l'authentification avec JWT
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # Change à IsAuthenticated en production
+    ),
+}
+
+
+
+# Gestion du CORS pour autoriser le frontend React
+CORS_ALLOW_ALL_ORIGINS = True  # Autorise toutes les origines (à restreindre en prod)
+
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
@@ -84,6 +107,10 @@ DATABASES = {
         'PASSWORD': '',  
         'HOST': '127.0.0.1',  
         'PORT': '3306', 
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            
+        },
     }
 }
 

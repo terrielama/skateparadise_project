@@ -9,9 +9,10 @@ function SignInForm({ toggleModal }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');  // État pour le message de succès
 
   // Fonction pour l'inscription
-const handleSignUp = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
     // Validation côté client
@@ -28,49 +29,51 @@ const handleSignUp = async (e) => {
             last_name: lastName,
         });
         console.log('User created successfully', response);
-        // Optionnel : Rediriger ou afficher un message de succès
+        setSuccessMessage('Inscription réussie !'); // Message de succès
+        setError(''); // Réinitialiser les erreurs
     } catch (err) {
         console.error('Error during signup', err);
         setError('Erreur lors de l\'inscription');
+        setSuccessMessage(''); // Réinitialiser le message de succès en cas d'erreur
     }
-};
-
+  };
 
   // Fonction pour la connexion
-const handleLogin = async (e) => {
-  e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/login/', {
-      email,
-      password,
-    });
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/login/', {
+        email,
+        password,
+      });
 
-    console.log('Connexion réussie', response);
+      console.log('Connexion réussie', response);
 
-    // Récupérer les tokens
-    const { access_token, refresh_token } = response.data;
+      // Récupérer les tokens
+      const { access_token, refresh_token } = response.data;
 
-    // Stocker les tokens dans le localStorage
-    localStorage.setItem('access_token', access_token);
-    localStorage.setItem('refresh_token', refresh_token);
+      // Stocker les tokens dans le localStorage
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
 
-    // Rediriger l'utilisateur vers une autre page (par exemple la page d'accueil)
-    // Utilise react-router-dom si tu l'as installé pour la redirection
-    // Par exemple : history.push('/dashboard');
-    window.location.href = '/';  // Exemple : redirige vers la page d'accueil
+      setSuccessMessage('Connexion réussie !'); // Message de succès
+      setError(''); // Réinitialiser les erreurs
 
-  } catch (err) {
-    console.error('Erreur lors de la connexion', err);
-    // Affichage d'un message d'erreur plus détaillé
-    if (err.response && err.response.data) {
-      setError(err.response.data.error || 'Identifiants invalides');
-    } else {
-      setError('Une erreur est survenue lors de la connexion');
+      // Rediriger l'utilisateur vers une autre page (par exemple la page d'accueil)
+      window.location.href = '/';  // Exemple : redirige vers la page d'accueil
+
+    } catch (err) {
+      console.error('Erreur lors de la connexion', err);
+      // Affichage d'un message d'erreur plus détaillé
+      if (err.response && err.response.data) {
+        setError(err.response.data.error || 'Identifiants invalides');
+      } else {
+        setError('Une erreur est survenue lors de la connexion');
+      }
+      setSuccessMessage(''); // Réinitialiser le message de succès en cas d'erreur
     }
-  }
-};
-
+  };
 
   return (
     <div className="modal">
@@ -104,10 +107,12 @@ const handleLogin = async (e) => {
                 />
               </div>
               <div>
-                <button type="submit">Se connecter</button>
+                
               </div>
             </form>
+            <button type="submit">Se connecter</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
+            {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} {/* Afficher le message de succès */}
             <button onClick={() => setIsLoginForm(false)}>
               Pas de compte ? Inscrivez-vous
             </button>
@@ -157,10 +162,12 @@ const handleLogin = async (e) => {
                 />
               </div>
               <div>
-                <button type="submit">S'inscrire</button>
+                
               </div>
             </form>
+            <button type="submit">S'inscrire</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
+            {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} {/* Afficher le message de succès */}
             <button onClick={() => setIsLoginForm(true)}>
               Vous avez déjà un compte ? Connexion
             </button>
