@@ -1,5 +1,3 @@
-# Create your views here.
-
 # views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,8 +7,8 @@ from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import AllowAny
-
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class SignUpView(APIView):
     def post(self, request):
@@ -36,6 +34,7 @@ class SignUpView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': 'Erreur lors de la création de l\'utilisateur : ' + str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -67,3 +66,24 @@ class LoginView(APIView):
             return Response({
                 'error': 'Identifiants invalides'
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]  # Assure-toi que JWTAuthentication est activé
+
+    def get(self, request):
+        print("Headers reçus :", request.headers)  # Debug pour vérifier les headers
+        
+        # Vérification si l'utilisateur est authentifié
+        if not request.user.is_authenticated:
+            return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Réponse avec les données de l'utilisateur
+        return Response({
+            "username": request.user.username,
+            "email": request.user.email,
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name
+        })
+

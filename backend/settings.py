@@ -154,9 +154,9 @@ STATIC_URL = 'static/'
 
 
 # Répertoire où les fichiers statiques seront collectés
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend_build', 'static'),  # Mettez ici le chemin de votre dossier `frontend_build`
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'frontend_build', 'static'), 
+# ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

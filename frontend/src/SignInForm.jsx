@@ -12,9 +12,7 @@ function SignInForm({ toggleModal }) {
   const [successMessage, setSuccessMessage] = useState('');  // État pour le message de succès
 
   // Fonction pour l'inscription
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-
+  const handleSignUp = async () => {
     // Validation côté client
     if (!email || !password || !firstName || !lastName) {
         setError('Tous les champs sont requis.');
@@ -39,9 +37,7 @@ function SignInForm({ toggleModal }) {
   };
 
   // Fonction pour la connexion
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
+  const handleLogin = async () => {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/login/', {
         email,
@@ -85,7 +81,7 @@ function SignInForm({ toggleModal }) {
         {isLoginForm ? (
           <div>
             <h2>Connexion</h2>
-            <form className="form-grid" onSubmit={handleLogin}>
+            <div className="form-grid">
               <div>
                 <label>Email</label>
                 <input
@@ -106,11 +102,8 @@ function SignInForm({ toggleModal }) {
                   required
                 />
               </div>
-              <div>
-                
-              </div>
-            </form>
-            <button type="submit">Se connecter</button>
+            </div>
+            <button onClick={handleLogin}>Se connecter</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} {/* Afficher le message de succès */}
             <button onClick={() => setIsLoginForm(false)}>
@@ -120,7 +113,7 @@ function SignInForm({ toggleModal }) {
         ) : (
           <div>
             <h2>Inscription</h2>
-            <form className="form-grid" onSubmit={handleSignUp}>
+            <div className="form-grid">
               <div>
                 <label>Nom</label>
                 <input
@@ -161,11 +154,8 @@ function SignInForm({ toggleModal }) {
                   required
                 />
               </div>
-              <div>
-                
-              </div>
-            </form>
-            <button type="submit">S'inscrire</button>
+            </div>
+            <button onClick={handleSignUp}>S'inscrire</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} {/* Afficher le message de succès */}
             <button onClick={() => setIsLoginForm(true)}>
