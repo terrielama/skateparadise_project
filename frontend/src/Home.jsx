@@ -3,7 +3,7 @@ import './assets/css/style.css'
 import userIcon from './assets/img/icon/user.svg'
 import shoppingIcon from './assets/img/icon/shopping.svg'
 import searchIcon from './assets/img/icon/search.svg'
-import homePic from './assets/img/img_page_accueil/home_pic.jpeg'
+import homePic from './assets/img/img_page_accueil/home_pic22.jpg'
 import SignInForm from './SignInForm'
 import { useNavigate } from 'react-router-dom' // Changement ici
 
