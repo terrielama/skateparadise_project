@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './assets/css/style.css';
 import axios from 'axios';
 
 function SignInForm({ toggleModal }) {

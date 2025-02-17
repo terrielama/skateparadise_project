@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavBar from './Nav';
-import '../assets/css/style.css'; 
+// import '../assets/css/style.css'; 
 
 const Profile = () => {
     const [user, setUser] = useState(null);

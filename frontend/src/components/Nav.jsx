@@ -2,7 +2,7 @@ import React from 'react';
 import userIcon from '../assets/img/icon/user.svg';
 import shoppingIcon from '../assets/img/icon/shopping.svg';
 import searchIcon from '../assets/img/icon/search.svg';
-import '../assets/css/style.css';
+// import '../assets/css/style.css';
 
 
 // Le composant Nav avec un export par défaut
